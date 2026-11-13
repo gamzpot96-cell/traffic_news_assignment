@@ -135,9 +135,12 @@ def generate_draft(data: DraftInput):
     sheet = create_fact_sheet(fact)
     if not os.getenv("OPENAI_API_KEY"):
         raise HTTPException(status_code=503, detail="OPENAI_API_KEY is not configured")
+    model = os.getenv("OPENAI_MODEL", "gpt-6-luna")
+    # Luna에서도 기존 temperature=0 설정을 사용하도록 추론을 끕니다.
+    model_options = {"reasoning_effort": "none"} if model == "gpt-6-luna" else {}
     try:
         result = OpenAI().chat.completions.create(
-            model=os.getenv("OPENAI_MODEL", "gpt-4.1-mini"),
+            model=model,
             messages=[
                 {"role": "system", "content": (
                     "한국어 교통 뉴스 초안을 작성하라. 사실표의 수치만 사용하고 "
@@ -147,6 +150,7 @@ def generate_draft(data: DraftInput):
                 {"role": "user", "content": json.dumps(sheet, ensure_ascii=False)},
             ],
             temperature=0,
+            **model_options,
         )
         output = (result.choices[0].message.content or "").strip()
     except Exception as error:

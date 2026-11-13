@@ -68,6 +68,12 @@ Copy-Item .env.example .env
 
 **경고:** 현재 검수자 로그인·권한 확인 기능이 없습니다. 승인 엔드포인트를 인터넷에 공개 배포하지 마세요. 검수 성공 여부는 사람이 입력하며 수치 자동 대조 엔진은 구현 전입니다. 비밀키는 `.env`에서만 관리하며 커밋하지 마세요.
 
+## AI 기사 생성 모델
+
+기본 모델은 `gpt-6-luna`입니다. `app/main.py`의 OpenAI 호출과 `.env.example`에 반영했습니다. 기존 `.env`에 `OPENAI_MODEL`이 있으면 그 값이 우선하므로 `OPENAI_MODEL=gpt-6-luna`로 변경하세요. Luna 사용 시 기존 `temperature=0` 설정과 호환되도록 `reasoning_effort="none"`을 전달합니다.
+
+모의 테스트는 외부 OpenAI API와 MySQL을 호출하지 않습니다. 실제 모델 이용 권한과 응답 품질은 별도 실호출 검증이 필요합니다.
+
 ## Notion 과제 별도 결과
 
 - [원본 기사 DB](https://app.notion.com/p/69183fcaeb04469d8512d2ed5da206a3) — 기사 3건 등록
